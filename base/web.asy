@@ -35,21 +35,6 @@ bool startswith(string s, string p)
     return true;
 }
 
-// string read_entire_file(string filename) {
-//     file f = input(filename, check=false, comment=""); // bonkers API
-//     if (error(f)) {
-//         console.error("cannot open: " + filename); 
-//         return "";
-//         // How the fuck do we return an error?
-//     }
-//     string content;
-//     while (!eof(f) && !error(f)) {
-//         content += f;
-//          if (!eof(f)) content += '\n';
-//     }
-//     return content;
-// }
-// Something is wrong with this function, binary files are corrupted.
 string read_entire_file(string filename) {
     file f = input(filename, check=false, comment="", mode="binary");
     if (error(f)) {
