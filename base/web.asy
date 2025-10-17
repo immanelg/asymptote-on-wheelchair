@@ -42,7 +42,6 @@ string read_entire_file(string filename) {
         return "";
     }
     string content = f;
-    console.debug(string(length(content)));
     return content;
 }
 
@@ -183,7 +182,6 @@ void handle_static_files()
     StaticFiles s = router.static_files;
 
     string file_path = s.disk_prefix + substr(request.path, length(s.prefix), length(request.path));
-    // console.debug(file_path);
 
     string contents = read_entire_file(file_path); // this is broken idk why i dont care touch grass
     // TODO: mime types
@@ -257,10 +255,8 @@ void serve(string host = "127.0.0.1", int port = 8080)
         /* FIXME: this is STRING startswith, not PATH startswith, so /static-garbage/123 is handled wrong.
             But I don't really want to bother with all this garbage */
             startswith(request.path, router.static_files.prefix)) {
-            // console.debug("handle static files "+request.path);
             handle_static_files();
         } else {
-            // console.debug("handler");
             Handler handler = route(router);
             handler();
         }
