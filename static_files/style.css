@@ -1,4 +1,6 @@
 body {
+    color: rgb(230 230 230);
+    background-color: rgb(30 30 30);
     font-family: sans-serif;
     max-width: 800px;
     margin: 0 auto;

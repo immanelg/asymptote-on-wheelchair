@@ -8,7 +8,7 @@ GET("/", new void() {
         </head>
         <body>
             <h1>Hello, World!</h1>
-            <img src="/static/logo.png" width="500" height="600">
+            <img src="/static/Go-Logo_Aqua.svg" width="500" height="500">
         </body>
     ');
 });

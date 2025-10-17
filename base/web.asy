@@ -10,7 +10,7 @@ struct Console {
 }
 Console console;
 
-// i accidentally wrote contains() instead of startswith() LMAO im so dumb.
+// i accidentally wrote contains() instead of startswith() im retarded
 //bool contains(string s, string p)
 //{
 //    string[] s = array(s);
@@ -35,21 +35,31 @@ bool startswith(string s, string p)
     return true;
 }
 
-string read_entire_file(string filename) { 
-    file f = input(filename, check=false); // bonkers API
+// string read_entire_file(string filename) {
+//     file f = input(filename, check=false, comment=""); // bonkers API
+//     if (error(f)) {
+//         console.error("cannot open: " + filename); 
+//         return "";
+//         // How the fuck do we return an error?
+//     }
+//     string content;
+//     while (!eof(f) && !error(f)) {
+//         content += f;
+//          if (!eof(f)) content += '\n';
+//     }
+//     return content;
+// }
+// Something is wrong with this function, binary files are corrupted.
+string read_entire_file(string filename) {
+    file f = input(filename, check=false, comment="", mode="binary");
     if (error(f)) {
         console.error("cannot open: " + filename); 
         return "";
-        // How the fuck do we return an error?
     }
-    string content;
-    while (!eof(f) && !error(f)) {
-        content += f;
-         // if (!eof(f)) content += "\n";// but only for text files???? i hate this languaege
-    }
+    string content = f;
+    console.debug(string(length(content)));
     return content;
 }
-
 
 struct Header {
     string key;
@@ -83,7 +93,7 @@ int write_http_response(TcpSocket socket, Response r)
 
     for (Header h : r.headers)
         socket_write(socket, h.key + ': ' + h.value + '\r\n');
-    socket_write(socket, '\r\n\r\n');
+    socket_write(socket, '\r\n');
 
     // https://stackoverflow.com/questions/15991173/is-the-content-length-header-required-for-a-http-1-0-response lol don't care
     socket_write(socket, r.body); 
@@ -163,14 +173,16 @@ struct Router {
 
 Response response;
 
-void init_response() {
+Request request;
+
+void clear_state() {
+    Request r; request = r;
+
     Response r; response = r;
     response.version = "HTTP/1.1";
     response.status = "200 OK";
     response.headers.push(Header("Server", "web.asy/0.1"));
 }
-
-Request request;
 
 Router router;
 
@@ -186,10 +198,13 @@ void handle_static_files()
     StaticFiles s = router.static_files;
 
     string file_path = s.disk_prefix + substr(request.path, length(s.prefix), length(request.path));
-    console.debug(file_path);
+    // console.debug(file_path);
 
     string contents = read_entire_file(file_path); // this is broken idk why i dont care touch grass
     // TODO: mime types
+    //response.headers.push(Header("Content-Type", "image/png"));
+    //response.headers.push(Header("Content-Length", string(length(contents))));
+
     response.body = contents;
 }
 
@@ -248,21 +263,19 @@ void serve(string host = "127.0.0.1", int port = 8080)
         TcpSocket socket = server_accept(server);
         // TODO: socket.addr
 
-        request = parse_http_request(socket);
+        clear_state();
 
-        init_response();
+        request = parse_http_request(socket);
         for (Handler before : router.before_request) before(); // TODO: if this returns Response, stop processing and send it; if this returns null, proceed.
 
-        //console.error(router.static_files != null);
-        console.error(request.path); console.error(router.static_files.prefix);
         if (router.static_files != null && 
         /* FIXME: this is STRING startswith, not PATH startswith, so /static-garbage/123 is handled wrong.
             But I don't really want to bother with all this garbage */
             startswith(request.path, router.static_files.prefix)) {
-            console.debug("handle static files "+request.path);
+            // console.debug("handle static files "+request.path);
             handle_static_files();
         } else {
-            console.debug("handler");
+            // console.debug("handler");
             Handler handler = route(router);
             handler();
         }
