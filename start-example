@@ -1,0 +1,2 @@
+#!/bin/sh
+./asy -dir base -config "" ./example.asy

@@ -15,6 +15,7 @@
 #include "runlabel.h"
 #include "runhistory.h"
 #include "runarray.h"
+#include "runrofl.h"
 #include "runfile.h"
 #include "runsystem.h"
 #include "runstring.h"
@@ -78,6 +79,7 @@ void gen_runpath_venv(venv &ve);
 void gen_runpath3d_venv(venv &ve);
 void gen_runmath_venv(venv &ve);
 void gen_rungsl_venv(venv &ve);
+void gen_runrofl_venv(venv &ve);
 
 void addType(tenv &te, symbol name, ty *t)
 {
@@ -903,6 +905,7 @@ void base_venv(venv &ve)
   gen_runpath_venv(ve);
   gen_runpath3d_venv(ve);
   gen_runmath_venv(ve);
+  gen_runrofl_venv(ve);
 
 #ifdef HAVE_LIBGSL
   gen_rungsl_venv(ve);

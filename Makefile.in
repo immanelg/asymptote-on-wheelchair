@@ -37,7 +37,7 @@ CAMP = camperror path drawpath drawlabel picture psfile texfile util settings \
 
 RUNTIME_FILES = runtime runbacktrace runpicture runlabel runhistory runarray \
 	runfile runsystem runpair runtriple runpath runpath3d runstring \
-	runmath
+	runmath runrofl
 
 # Files to be scanned for pre-translated symbols defined by SYM(name).
 SYMBOL_FILES = types builtin gsl $(RUNTIME_FILES)
@@ -81,7 +81,7 @@ CONTEXTFILES = colo-asy.tex
 ASY = ./asy -dir base -config "" -render=0
 
 DEFS = @DEFS@ @OPTIONS@ @PTHREAD_CFLAGS@ -DFFTWPP_SINGLE_THREAD -Wall
-CFLAGS = @CFLAGS@
+CFLAGS = -O0 @CFLAGS@
 OPTS = $(DEFS) @CPPFLAGS@ @CXXFLAGS@ $(CFLAGS) -ILspCpp/include
 
 GLEWOPTS = $(DEFS) @CPPFLAGS@ $(CFLAGS) -DGLEW_NO_GLU -DGLEW_BUILD -O1 -fPIC
@@ -92,8 +92,8 @@ GLEWOPTS = $(DEFS) @CPPFLAGS@ $(CFLAGS) -DGLEW_NO_GLU -DGLEW_BUILD -O1 -fPIC
 # shared library.
 SHAREDOPTS = $(filter-out -DUSEGC, $(OPTS)) -fPIC -DFOR_SHARED
 
-CXX = @CXX@
-CC = @CC@
+CXX = clang++
+CC = clang
 MAKEDEPEND = $(OPTS) -O0 -M -MG -DDEPEND
 LEX = @LEX@
 

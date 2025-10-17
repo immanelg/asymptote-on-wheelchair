@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include "macro_map.h"
 
 #include <cassert>
